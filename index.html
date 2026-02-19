@@ -1,1 +1,136 @@
-html <!DOCTYPE html> <html lang="zh-Hant"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>計算機</title> <style> body { font-family: Arial, sans-serif; background-color: #f0f0f0; } .calculator { width: 300px; margin: 50px auto; padding: 20px; background-color: #fff; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); } .display { width: 100%; height: 40px; margin-bottom: 20px; padding: 10px; background-color: #f5f5f5; border: 1px solid #ccc; font-size: 24px; text-align: right; } .button { width: 60px; height: 40px; margin: 5px; padding: 10px; background-color: #fff; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; } .button:hover { background-color: #f5f5f5; } .button:active { background-color: #ccc; } .operator { background-color: #ff9900; color: #fff; } .operator:hover { background-color: #ffad33; } .operator:active { background-color: #ffcc00; } </style> </head> <body> <div class="calculator"> <input type="text" class="display" id="display" value="0"> <div class="button-container"> <button class="button" onclick="clearDisplay()">C</button> <button class="button" onclick="backspace()">DEL</button> <button class="button operator" onclick="calculate('+')">+</button> <button class="button operator" onclick="calculate('-')">-</button> <button class="button operator" onclick="calculate('*')">*</button> <button class="button operator" onclick="calculate('/')">/</button> <button class="button" onclick="appendNumber(7)">7</button> <button class="button" onclick="appendNumber(8)">8</button> <button class="button" onclick="appendNumber(9)">9</button> <button class="button" onclick="appendNumber(4)">4</button> <button class="button" onclick="appendNumber(5)">5</button> <button class="button" onclick="appendNumber(6)">6</button> <button class="button" onclick="appendNumber(1)">1</button> <button class="button" onclick="appendNumber(2)">2</button> <button class="button" onclick="appendNumber(3)">3</button> <button class="button" onclick="appendNumber(0)">0</button> <button class="button" onclick="appendDecimal()">.</button> <button class="button operator" onclick="calculate('=')">=</button> </div> </div> <script> let display = document.getElementById('display'); let currentNumber = ''; let previousNumber = ''; let operator = ''; function clearDisplay() { display.value = '0'; currentNumber = ''; previousNumber = ''; operator = ''; } function backspace() { let currentValue = display.value; if (currentValue.length > 1) { display.value = currentValue.slice(0, -1); currentNumber = currentNumber.slice(0, -1); } else { display.value = '0'; currentNumber = ''; } } function appendNumber(number) { if (currentNumber === '0') { currentNumber = number.toString(); display.value = currentNumber; } else { currentNumber += number.toString(); display.value += number.toString(); } } function appendDecimal() { if (!currentNumber.includes('.')) { currentNumber += '.'; display.value += '.'; } } function calculate(op) { if (op === '=') { let result; switch (operator) { case '+': result = parseFloat(previousNumber) + parseFloat(currentNumber); break; case '-': result = parseFloat(previousNumber) - parseFloat(currentNumber); break; case '*': result = parseFloat(previousNumber) * parseFloat(currentNumber); break; case '/': result = parseFloat(previousNumber) / parseFloat(currentNumber); break; default: result = parseFloat(currentNumber); break; } display.value = result.toString(); currentNumber = result.toString(); previousNumber = ''; operator = ''; } else { previousNumber = currentNumber; currentNumber = ''; operator = op; display.value += op; } } </script> </body> </html
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jarvis 股票儀表板</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 引入系統字體，確保蘋果風格 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif, "PingFang TC", "Noto Sans CJK TC";
+            background-color: #F5F5F7; /* Apple 淺色模式背景 */
+            color: #1D1D1F; /* Apple 深色文字 */
+        }
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1C1C1E; /* Apple 深色模式背景 */
+                color: #F5F5F7; /* Apple 淺色文字 */
+            }
+        }
+
+        /* 自定義陰影，模仿蘋果物件浮起效果 */
+        .card-shadow {
+            box-shadow: 
+                0 1px 2px rgba(0,0,0,0.05),
+                0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-shadow:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 2px 4px rgba(0,0,0,0.08),
+                0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        /* 漲跌顏色 */
+        .text-gain { color: #007AFF; } /* 蘋果藍 */
+        .text-loss { color: #FF453A; } /* 蘋果紅 */
+        .bg-gain { background-color: rgba(0, 122, 255, 0.1); }
+        .bg-loss { background-color: rgba(255, 69, 58, 0.1); }
+
+        /* 毛玻璃效果 */
+        .glassmorphism {
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            background-color: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.125);
+        }
+        @media (prefers-color-scheme: dark) {
+            .glassmorphism {
+                background-color: rgba(28, 28, 30, 0.75);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+        }
+    </style>
+</head>
+<body class="p-8">
+    <div class="max-w-7xl mx-auto py-8">
+        <h1 class="text-4xl font-semibold mb-8 text-center md:text-left">我的投資組合</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div class="bg-white card-shadow rounded-2xl p-6 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-500/10 to-transparent rounded-2xl pointer-events-none"></div>
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="text-2xl font-semibold">台積電</h2>
+                        <p class="text-gray-500">TSM / 2330.TW</p>
+                    </div>
+                    <span class="text-gain text-3xl font-bold">1,025.00</span>
+                </div>
+                <div class="flex justify-between items-end">
+                    <div>
+                        <p class="text-gray-500 text-sm">今日漲幅</p>
+                        <span class="text-gain text-lg font-medium">+15.00 (+1.49%)</span>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-gray-500 text-sm">市值</p>
+                        <span class="text-lg font-medium">26.5兆 TWD</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white card-shadow rounded-2xl p-6 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-red-500/10 to-transparent rounded-2xl pointer-events-none"></div>
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="text-2xl font-semibold">蘋果</h2>
+                        <p class="text-gray-500">AAPL / NASDAQ</p>
+                    </div>
+                    <span class="text-loss text-3xl font-bold">170.25</span>
+                </div>
+                <div class="flex justify-between items-end">
+                    <div>
+                        <p class="text-gray-500 text-sm">今日跌幅</p>
+                        <span class="text-loss text-lg font-medium">-2.75 (-1.59%)</span>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-gray-500 text-sm">市值</p>
+                        <span class="text-lg font-medium">2.6兆 USD</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white card-shadow rounded-2xl p-6 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-500/10 to-transparent rounded-2xl pointer-events-none"></div>
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="text-2xl font-semibold">聯發科</h2>
+                        <p class="text-gray-500">2454.TW</p>
+                    </div>
+                    <span class="text-3xl font-bold">1,080.00</span>
+                </div>
+                <div class="flex justify-between items-end">
+                    <div>
+                        <p class="text-gray-500 text-sm">今日漲幅</p>
+                        <span class="text-lg font-medium">0.00 (0.00%)</span>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-gray-500 text-sm">市值</p>
+                        <span class="text-lg font-medium">1.7兆 TWD</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-1 md:col-span-2 lg:col-span-1 glassmorphism card-shadow rounded-2xl p-6 flex flex-col items-center justify-center text-gray-600 cursor-pointer hover:bg-white/90">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 mb-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <span class="text-xl font-medium">新增股票</span>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>
