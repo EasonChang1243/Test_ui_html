@@ -1,32 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>計算機</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        
+        .calculator {
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .display {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            font-size: 24px;
+            text-align: right;
+        }
+        
+        .button {
+            width: 60px;
+            height: 40px;
+            margin: 5px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .button:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .button:active {
+            background-color: #ccc;
+        }
+        
+        .operator {
+            background-color: #ff9900;
+            color: #fff;
+        }
+        
+        .operator:hover {
+            background-color: #ffad33;
+        }
+        
+        .operator:active {
+            background-color: #ffcc00;
+        }
+    </style>
 </head>
 <body>
     <div class="calculator">
-        <input type="text" id="display" disabled>
-        <div class="buttons">
-            <button id="clear">C</button>
-            <button id="backspace">&lt;</button>
-            <button id="equals">=</button>
-            <button id="add">+</button>
-            <button id="subtract">-</button>
-            <button id="multiply">*</button>
-            <button id="divide">/</button>
-            <button id="zero">0</button>
-            <button id="one">1</button>
-            <button id="two">2</button>
-            <button id="three">3</button>
-            <button id="four">4</button>
-            <button id="five">5</button>
-            <button id="six">6</button>
-            <button id="seven">7</button>
-            <button id="eight">8</button>
-            <button id="nine">9</button>
+        <input type="text" class="display" id="display" value="0">
+        <div class="button-container">
+            <button class="button" onclick="clearDisplay()">C</button>
+            <button class="button" onclick="backspace()">DEL</button>
+            <button class="button operator" onclick="calculate('+')">+</button>
+            <button class="button operator" onclick="calculate('-')">-</button>
+            <button class="button operator" onclick="calculate('*')">*</button>
+            <button class="button operator" onclick="calculate('/')">/</button>
+            <button class="button" onclick="appendNumber(7)">7</button>
+            <button class="button" onclick="appendNumber(8)">8</button>
+            <button class="button" onclick="appendNumber(9)">9</button>
+            <button class="button" onclick="appendNumber(4)">4</button>
+            <button class="button" onclick="appendNumber(5)">5</button>
+            <button class="button" onclick="appendNumber(6)">6</button>
+            <button class="button" onclick="appendNumber(1)">1</button>
+            <button class="button" onclick="appendNumber(2)">2</button>
+            <button class="button" onclick="appendNumber(3)">3</button>
+            <button class="button" onclick="appendNumber(0)">0</button>
+            <button class="button" onclick="appendDecimal()">.</button>
+            <button class="button operator" onclick="calculate('=')">=</button>
         </div>
     </div>
-    <script src="script.js"></script>
+    
+    <script>
+        let display = document.getElementById('display');
+        
+        function clearDisplay() {
+            display.value = '0';
+        }
+        
+        function backspace() {
+            let currentValue = display.value;
+            if (currentValue.length > 1) {
+                display.value = currentValue.slice(0, -1);
+            } else {
+                display.value = '0';
+            }
+        }
+        
+        function appendNumber(number) {
+            let currentValue = display.value;
+            if (currentValue === '0') {
+                display.value = number.toString();
+            } else {
+                display.value += number.toString();
+            }
+        }
+        
+        function appendDecimal() {
+            let currentValue = display.value;
+            if (!currentValue.includes('.')) {
+                display.value += '.';
+            }
+        }
+        
+        function calculate(operator) {
+            let currentValue = display.value;
+            if (operator === '=') {
+                try {
+                    let result = eval(currentValue);
+                    display.value = result.toString();
+                } catch (error) {
+                    display.value = '錯誤';
+                }
+            } else {
+                display.value += operator;
+            }
+        }
+    </script>
 </body>
-</html>
+</html
